@@ -1,12 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+
+import store from "./data/store";
+
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// subscribe to any changes
+ let render = () => {
+// get the current state using the getState method
+// we can get the state, but not update it
+	let state = store.getState();
+// for now, just log the new count
+	ReactDOM.render(
+		<App 
+			player1={state.player1} 
+			player2={state.player2} 
+			server = {state.server}
+			winner={state.winner} 
+			games = {state.games} 
+			handlePlayer1={ () => store.dispatch({ type: "player1" }) }
+			handlePlayer2={ () => store.dispatch({ type: "player2" }) }
+			handleReset={ () => store.dispatch({ type: "reset" }) } 
+		/>,
+			document.getElementById('root')
+	);
+};
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+store.subscribe(render);
+render();
+
